@@ -13,7 +13,6 @@
 
 module System.Taffybar.Util where
 
-import           Conduit
 import           Control.Applicative
 import           Control.Arrow ((&&&))
 import           Control.Concurrent
@@ -28,7 +27,6 @@ import           Data.Maybe
 import qualified Data.Text as T
 import           Data.Tuple.Sequence
 import qualified GI.GdkPixbuf.Objects.Pixbuf as Gdk
-import           Network.HTTP.Simple
 import           System.Directory
 import           System.Environment.XDG.BaseDir
 import           System.Exit (ExitCode (..))
@@ -159,12 +157,6 @@ getPixbufFromFilePath filepath = do
        logM "System.Taffybar.WindowIcon" WARNING $
             printf "Failed to load icon from filepath %s" filepath
   return result
-
-downloadURIToPath :: Request -> FilePath -> IO ()
-downloadURIToPath uri filepath =
-  createDirectoryIfMissing True directory >>
-  (runConduitRes $ httpSource uri getResponseBody .| sinkFile filepath)
-  where (directory, _) = splitFileName filepath
 
 postGUIASync :: IO () -> IO ()
 postGUIASync = Gtk.postGUIASync
